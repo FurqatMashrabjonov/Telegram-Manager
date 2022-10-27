@@ -97,7 +97,7 @@ class BotController extends Controller
         Log::debug(json_encode($request->all()));
         $message = $request['message'];
         $bot = Bot::query()->where('token', $token)->first();
-//        $this->from($request['message'], $bot);
+        $this->from($request['message'], $bot);
         return response()->json([]);
     }
 
