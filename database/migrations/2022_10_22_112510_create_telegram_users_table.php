@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->string('username');
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('lang')->nullable()->default(null);
             $table->boolean('is_premium')->default(false);
             $table->timestamps();
         });

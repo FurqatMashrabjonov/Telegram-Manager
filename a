@@ -1,0 +1,12 @@
+=> [34;4mApp\Telegram\Api\Client[39;24m {#3947
+     +[1mbot[22m: [34;4mApp\Models\Bot[39;24m {#4273
+       [34mid[39m: [35m1[39m,
+       [34muser_id[39m: [35m101[39m,
+       [34mtoken[39m: "[32m2107607429:AAG2leDrFpRkGAbh9uP29kCxetYSCu4cuEM[39m",
+       [34musername[39m: [36mnull[39m,
+       [34mwebhook_was_set[39m: [36mfalse[39m,
+       [34mcreated_at[39m: "[32m2022-10-27 16:58:03[39m",
+       [34mupdated_at[39m: "[32m2022-10-27 16:58:03[39m",
+     },
+   }
+

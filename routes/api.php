@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BotController;
+use App\Telegram\Handle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,4 +26,5 @@ Route::any('/webhook', function (Request $request) {
 });
 
 
-Route::any('webhook/{token}', [BotController::class, 'webhook']);
+//Main Route
+Route::any('webhook/{token}', Handle::class);
