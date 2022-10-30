@@ -15,4 +15,8 @@ class Bot extends Model
     {
         return 'token';
     }
+
+    public function users(){
+        return $this->hasMany(TelegramUser::class);
+    }
 }

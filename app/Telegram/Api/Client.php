@@ -27,7 +27,7 @@ class Client
         Log::debug(json_encode($response->body()));
     }
 
-    public function sendMessage($chat_id, $text, $opts)
+    public function sendMessage($chat_id, $text, $opts = [])
     {
         $this->call('sendMessage', array_merge([
             'chat_id' => $chat_id,
@@ -35,7 +35,7 @@ class Client
         ], $opts));
     }
 
-    public function sendPhoto($chat_id, $photo_url, $opts)
+    public function sendPhoto($chat_id, $photo_url, $opts = [])
     {
         $this->call('sendPhoto', array_merge([
             'chat_id' => $chat_id,

@@ -17,10 +17,10 @@ return new class extends Migration {
             $table->unsignedBigInteger('chat_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('bot_id');
-            $table->string('username');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('lang')->nullable()->default(null);
+            $table->string('username')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('lang')->nullable()->default('uz');
             $table->boolean('is_premium')->default(false);
             $table->timestamps();
         });
