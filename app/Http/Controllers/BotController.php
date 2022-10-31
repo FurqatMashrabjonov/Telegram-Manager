@@ -6,11 +6,15 @@ use App\Models\Bot;
 use App\Models\TelegramUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class BotController extends Controller
 {
+
+    protected $base_url = 'https://api.telegram.org/bot';
+
     /**
      * Display a listing of the resource.
      *
@@ -33,27 +37,6 @@ class BotController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param \App\Models\Bot $bot
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Bot $bot)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -80,17 +63,6 @@ class BotController extends Controller
         return redirect()->back()->with('success', 'Bot updated.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Bot $bot
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Bot $bot)
-    {
-        //
-    }
-
 
     public function webhook($token, Request $request)
     {
@@ -106,12 +78,29 @@ class BotController extends Controller
         $telegram_user = TelegramUser::query()
             ->where('bot_id', $bot->id)
             ->where('chat_id', $message['chat']['id'])->first();
-        if (!$telegram_user){
+        if (!$telegram_user) {
             TelegramUser::query()->create([
                 'chat_id' => $message['chat_id'],
 
             ]);
         }
     }
+
+    public function setWebhook(Request $request)
+    {
+        $bot = Bot::query()->where('user_id', \auth()->user()->getAuthIdentifier())->first();
+        $response = Http::get($this->base_url . $bot->token . '/setWebhook', [
+            'url' => $request->webhook_url . '/api/webhook/' . $bot->token
+        ]);
+
+        dd($response->body());
+    }
+
+    public function deleteWebhook()
+    {
+        $bot = Bot::query()->where('user_id', \auth()->user()->getAuthIdentifier())->first();
+        $response = Http::get($this->base_url . $bot->token . '/deleteWebhook');
+
+        dd($response->body());
+    }
 }
-//totottewt

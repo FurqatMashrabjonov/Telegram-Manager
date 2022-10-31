@@ -4,6 +4,7 @@ use App\Http\Controllers\BotController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TelegramUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -54,7 +55,9 @@ Route::middleware('auth')->group(function () {
         ->prefix('products')->as('products.')
         ->group(__DIR__ . '/products/index.php');
 
-
+    Route::controller(TelegramUserController::class)
+        ->prefix('users')->as('telegram_users.')
+        ->group(__DIR__ . '/telegram_users/index.php');
 
     Route::get('profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');

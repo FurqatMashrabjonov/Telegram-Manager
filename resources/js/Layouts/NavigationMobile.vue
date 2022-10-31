@@ -35,7 +35,7 @@
           </li>
 
           <li class="relative px-6 py-3">
-            <ResponsiveNavLink :href="route('users.index')" :active="route().current('users.index')">
+            <ResponsiveNavLink :href="route('telegram_users.index')" :active="route().current('telegram_users.index')">
               <template #icon>
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                      xmlns="http://www.w3.org/2000/svg">

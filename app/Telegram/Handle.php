@@ -7,16 +7,21 @@ use App\Models\TelegramUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use function Symfony\Component\Translation\t;
 
 class Handle
 {
 
     public function __invoke($token, Request $request)
     {
+        if (isset($request['ok']) && !$request['ok'])
+            return false;
+
         $bot = Bot::query()->where('token', $token)->first();
-        $this->user($bot, $request->all());
+        $user = $this->user($bot, $request->all());
+
         $parsed = $this->parser($request->all()) . 'Handler';
-        $this->$parsed($bot, $request);
+        $this->$parsed($bot, $request, $user);
 
         return true;
     }
@@ -40,7 +45,7 @@ class Handle
             ->where('chat_id', $request['message']['chat']['id'])
             ->first();
         if ($telegram_user == null) {
-            $bot->users()->create(
+            $telegram_user = $bot->users()->create(
                 array_merge(
                     $request['message']['from'],
                     [
@@ -50,24 +55,41 @@ class Handle
                 )
             );
         }
+        return $telegram_user;
+    }
 
+
+    public function checkUserLang($user): bool
+    {
+        return $user->lang != null;
     }
 
     //Handlers
 
-    protected function commandHandler($bot, $request)
+    protected function commandHandler($bot, $request, $user)
     {
+        $hasLang = $this->checkUserLang($user);
+
+        if (!$hasLang) {
+            (new Language($bot))->askLanguage(new Message($request['message']));
+            return true;
+        }
         $handler = config('telegram.commands')[substr($request['message']['text'], 1)] ?? null;
         if ($handler != null) (new $handler($bot))->handle(new Message($request['message']));
     }
 
-    protected function textHandler($bot, $request)
+    protected function textHandler($bot, $request, $user)
     {
-        Http::get('https://api.telegram.org/bot2107607429:AAG2leDrFpRkGAbh9uP29kCxetYSCu4cuEM/sendMessage', [
-                'chat_id' => $request['message']['chat']['id'],
-                'text' => 'Text keldi'
-            ]
-        );
+
+        if (array_key_exists($request['message']['text'], config('telegram.languages'))) {
+            (new Language($bot))->setLanguage(new Message($request['message']), $user);
+        }
+
+//        Http::get('https://api.telegram.org/bot2107607429:AAG2leDrFpRkGAbh9uP29kCxetYSCu4cuEM/sendMessage', [
+//                'chat_id' => $request['message']['chat']['id'],
+//                'text' => 'icidaekan'
+//            ]
+//        );
     }
 
     protected function callbackQueryHandler($bot, $request)
