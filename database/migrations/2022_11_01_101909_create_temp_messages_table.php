@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('temp_messages', function (Blueprint $table) {
+            $table->id();
             $table->unsignedBigInteger('chat_id');
             $table->unsignedBigInteger('message_id');
         });

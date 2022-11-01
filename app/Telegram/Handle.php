@@ -7,7 +7,6 @@ use App\Models\TelegramUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use function Symfony\Component\Translation\t;
 
 class Handle
 {
@@ -84,12 +83,6 @@ class Handle
         if (array_key_exists($request['message']['text'], config('telegram.languages'))) {
             (new Language($bot))->setLanguage(new Message($request['message']), $user);
         }
-
-//        Http::get('https://api.telegram.org/bot2107607429:AAG2leDrFpRkGAbh9uP29kCxetYSCu4cuEM/sendMessage', [
-//                'chat_id' => $request['message']['chat']['id'],
-//                'text' => 'icidaekan'
-//            ]
-//        );
     }
 
     protected function callbackQueryHandler($bot, $request)

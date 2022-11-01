@@ -45,6 +45,7 @@ class Language extends Client
         foreach ($temp_messages as $temp_message) {
             $this->deleteMessage($temp_message->chat_id, $temp_message->message_id);
         }
+        TempMessage::query()->where('chat_id', $chat_id)->delete();
     }
 
 }
