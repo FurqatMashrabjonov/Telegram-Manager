@@ -20,16 +20,16 @@ class Client
         $this->client = new C(['base_uri' => 'https://api.telegram.org']);
     }
 
-    private function call($method, $opts): void
+    private function call($method, $opts): mixed
     {
         $url = "/bot{$this->bot->token}/{$method}";
         $response = Http::get($this->base_url . $url, $opts);
-        Log::debug(json_encode($response->body()));
+        return json_decode($response->body());
     }
 
     public function sendMessage($chat_id, $text, $opts = [])
     {
-        $this->call('sendMessage', array_merge([
+       return $this->call('sendMessage', array_merge([
             'chat_id' => $chat_id,
             'text' => $text,
         ], $opts));
@@ -37,7 +37,7 @@ class Client
 
     public function sendPhoto($chat_id, $photo_url, $opts = [])
     {
-        $this->call('sendPhoto', array_merge([
+       return $this->call('sendPhoto', array_merge([
             'chat_id' => $chat_id,
             'photo' => $photo_url,
             'reply_markup' => [
@@ -51,6 +51,14 @@ class Client
                 ])
             ]
         ], $opts));
+    }
+
+    public function deleteMessage($chat_id, $message_id)
+    {
+        return $this->call('deleteMessage', [
+            'chat_id' => $chat_id,
+            'message_id' => $message_id
+        ]);
     }
 
 }
