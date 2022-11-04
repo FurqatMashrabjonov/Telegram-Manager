@@ -11,7 +11,7 @@ return [
         '🇷🇺Русский' => 'ru'
     ],
 
-    'menus' => require_once app_path('Telegram/Resources/menu/menu.php'),
+    'menus' => require_once app_path('Telegram/Resources/menu/index.php'),
     'uz' => require_once app_path('Telegram/Resources/lang/uz.php'),
     'ru' => require_once app_path('Telegram/Resources/lang/ru.php'),
     'en' => require_once app_path('Telegram/Resources/lang/en.php'),

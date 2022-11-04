@@ -4,6 +4,7 @@ namespace App\Telegram;
 
 use App\Models\Bot;
 use App\Models\TelegramUser;
+use App\Telegram\Handles\Menu\MainMenuHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +83,10 @@ class Handle
 
         if (array_key_exists($request['message']['text'], config('telegram.languages'))) {
             (new Language($bot))->setLanguage(new Message($request['message']), $user);
+        } else if (array_key_exists($request['message']['text'], getMainMenuAsArray($user->lang))) {
+            (new MainMenuHandler($bot))->{getMainMenuAsArray($user->lang)[$request['message']['text']]}(new Message($request['message']), $user);
         }
+
     }
 
     protected function callbackQueryHandler($bot, $request)

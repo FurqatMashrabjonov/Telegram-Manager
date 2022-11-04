@@ -2,11 +2,11 @@
 
 namespace App\Telegram;
 
-use App\Helpers\TempMessageHelper;
 use App\Models\TelegramUser;
 use App\Models\TempMessage;
 use App\Models\User;
 use App\Telegram\Api\Client;
+use App\Telegram\Commands\Start;
 
 class Language extends Client
 {
@@ -36,6 +36,8 @@ class Language extends Client
         TempMessage::query()->insert(['chat_id' => $message->chat->id, 'message_id' => $message->message_id]);
 
         $this->deleteTempMessages($message->chat->id);
+
+        (new Start($this->bot))->handle($message);
 
     }
 

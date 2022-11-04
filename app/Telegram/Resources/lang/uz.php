@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'welcome' => 'Hush kelibsiz'
+    'welcome' => 'Hush kelibsiz',
+    'categories' => 'Kategoriyani tanlang'
 ];
