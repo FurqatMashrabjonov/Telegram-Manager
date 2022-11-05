@@ -34,9 +34,9 @@ trait Pagination
                 'callback_data' => 'categories.page.' . ($page - 1)
             ];
 
-        if ($page > 1 && $page < ceil($categories_count / 5))
+
             $bottom_buttons[] = [
-                'text' => $page,
+                'text' => (string)$page . ' / ' . (string)ceil($categories_count / 5),
                 'callback_data' => '...'
             ];
 

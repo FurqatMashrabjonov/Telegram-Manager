@@ -40,17 +40,26 @@ class Handle
 
     public function user($bot, $request)
     {
+        $res = [];
+        if (isset($request['callback_query'])) {
+            $res['message'] = $request['callback_query']['message'];
+            $res['from'] = $request['callback_query']['from'];
+        } else if (isset($request['message'])) {
+            $res['message'] = $request['message'];
+            $res['from'] = $request['message']['from'];
+        }
+
         $telegram_user = TelegramUser::query()
             ->where('bot_id', $bot->id)
-            ->where('chat_id', $request['message']['chat']['id'])
+            ->where('chat_id', $res['message']['chat']['id'])
             ->first();
         if ($telegram_user == null) {
             $telegram_user = $bot->users()->create(
                 array_merge(
-                    $request['message']['from'],
+                    $res['from'],
                     [
                         'user_id' => $bot->user_id,
-                        'chat_id' => $request['message']['chat']['id']
+                        'chat_id' => $res['message']['chat']['id']
                     ]
                 )
             );
@@ -89,13 +98,16 @@ class Handle
 
     }
 
-    protected function callbackQueryHandler($bot, $request)
+    protected function callbackQueryHandler($bot, $request, $user)
     {
-        Http::get('https://api.telegram.org/bot2107607429:AAG2leDrFpRkGAbh9uP29kCxetYSCu4cuEM/sendMessage', [
-                'chat_id' => $request['callback_query']['message']['chat']['id'],
-                'text' => 'Calback data keldi'
-            ]
-        );
+        if (str_contains($request['callback_query']['data'], 'categories')) {
+            if (str_contains($request['callback_query']['data'], 'page')) {
+                (new MainMenuHandler($bot))
+                    ->categories(new Message($request['callback_query']['message']), $user, (int)explode('page.', $request['callback_query']['data'])[1], true);
+            } else {
+
+            }
+        }
     }
 
 

@@ -20,13 +20,21 @@ class MainMenuHandler extends Client
 
     }
 
-    public function categories(Message $message, TelegramUser $user, $page = 1)
+    public function categories(Message $message, TelegramUser $user, $page = 1, $update = false)
     {
-        $this->sendMessage($message->chat->id, config('telegram.' . $user->lang)['categories'], [
-            'reply_markup' => json_encode([
-                'inline_keyboard' => $this->categoryPagination($page)
-            ])
-        ]);
+        if ($update) {
+            $this->editMessageReplyMarkup($message->chat->id, $message->message_id, [
+                'reply_markup' => json_encode([
+                    'inline_keyboard' => $this->categoryPagination($page)
+                ])
+            ]);
+        } else {
+            $this->sendMessage($message->chat->id, config('telegram.' . $user->lang)['categories'], [
+                'reply_markup' => json_encode([
+                    'inline_keyboard' => $this->categoryPagination($page)
+                ])
+            ]);
+        }
     }
 
     public function settings(Message $message, TelegramUser $user)

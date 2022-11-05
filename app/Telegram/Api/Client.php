@@ -29,7 +29,7 @@ class Client
 
     public function sendMessage($chat_id, $text, $opts = [])
     {
-       return $this->call('sendMessage', array_merge([
+        return $this->call('sendMessage', array_merge([
             'chat_id' => $chat_id,
             'text' => $text,
         ], $opts));
@@ -37,20 +37,19 @@ class Client
 
     public function sendPhoto($chat_id, $photo_url, $opts = [])
     {
-       return $this->call('sendPhoto', array_merge([
+        return $this->call('sendPhoto', array_merge([
             'chat_id' => $chat_id,
             'photo' => $photo_url,
-            'reply_markup' => [
-                'inline_keyboard' => json_encode([
-                    [
-                        [
-                            'text' => "Youtube",
-                            'url' => 'https://youtube.com/c/FurqatMashrabjonov'
-                        ]
-                    ]
-                ])
-            ]
         ], $opts));
+    }
+
+    public function editMessageReplyMarkup($chat_id, $message_id, $opts = [])
+    {
+        return $this->call('editMessageReplyMarkup', array_merge([
+                'chat_id' => $chat_id,
+                'message_id' => $message_id
+            ], $opts)
+        );
     }
 
     public function deleteMessage($chat_id, $message_id)
