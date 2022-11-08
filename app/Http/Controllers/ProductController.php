@@ -6,6 +6,8 @@ use App\Http\Requests\ProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 
 class ProductController extends Controller
@@ -51,9 +53,23 @@ class ProductController extends Controller
     public function store(ProductRequest $request)
     {
 
-        //TODO: IMAGE LOAD
 
-        Product::query()->insert(array_merge($request->validated(), ['user_id' => auth()->user()->getAuthIdentifier()]));
+        $product = Product::query()
+            ->create(array_merge($request->only(['name', 'description', 'price', 'category_id']),
+                ['user_id' => auth()->user()->getAuthIdentifier()]));
+
+        if ($request->file('image')) {
+            $file_name = Str::random(10) . '.' . $request->file('image')->getClientOriginalExtension();
+
+            $folder_path = storage_path('app/products/' . auth()->user()->getAuthIdentifier() . '/' . $product->id);
+            mkdir($folder_path, 0777, true);
+
+            $request->file('image')->move($folder_path, $file_name);
+
+            $product->image()->create([
+                'path' => $file_name
+            ]);
+        }
 
         return redirect(route('products.index'))->with(['success' => 'Product was created successfully']);
     }

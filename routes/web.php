@@ -7,6 +7,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TelegramUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -63,4 +66,13 @@ Route::middleware('auth')->group(function () {
     Route::put('profile', [ProfileController::class, 'update'])->name('profile.update');
 
 
+});
+
+
+Route::get('img', function () {
+    $res = Http::get('https://api.telegram.org/bot2107607429:AAG2leDrFpRkGAbh9uP29kCxetYSCu4cuEM/sendPhoto', [
+        'chat_id' => '778912691',
+        'photo' => 'https://720d-213-230-72-63.eu.ngrok.io/product_images/101/49/tiNGKr25iO.jpg'
+    ]);
+    echo $res->body();
 });

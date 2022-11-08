@@ -9,7 +9,7 @@ class Message
 
     public function __construct($message)
     {
-        $this->text = $message['text'];
+        $this->text = $message['text'] ?? '';
         $this->from = $message['from'];
         $this->chat = new Chat($message['chat']);
         $this->message_id = $message['message_id'];

@@ -28,3 +28,8 @@ Route::any('/webhook', function (Request $request) {
 
 //Main Route
 Route::any('webhook/{token}', Handle::class);
+
+Route::post('/photo', function (Request $request){
+    \Illuminate\Support\Facades\Log::debug(json_encode($request->file('image')));
+    return response()->json($request->file('image'));
+});

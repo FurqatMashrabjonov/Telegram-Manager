@@ -26,8 +26,9 @@ class ProductRequest extends FormRequest
         return [
             'name' => ['required', 'string'],
             'description' => ['required', 'string'],
-            'category_id' => ['required', 'numeric','exists:categories,id'],
-            'price' => ['required', 'numeric']
+            'category_id' => ['required', 'numeric', 'exists:categories,id'],
+            'price' => ['required', 'numeric'],
+            'image' => ['required', 'mimes:jpeg,jpg,png']
         ];
     }
 }

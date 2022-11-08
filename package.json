@@ -21,7 +21,14 @@
     },
     "dependencies": {
         "boxicons": "^2.1.4",
+        "filepond": "^4.30.4",
+        "filepond-plugin-file-validate-type": "^1.2.8",
+        "filepond-plugin-image-preview": "^4.6.11",
         "sweetalert2": "^11.6.1",
-        "vue-sweetalert2": "^5.0.5"
+        "vue-filepond": "^7.0.3",
+        "vue-media-upload": "^1.1.4",
+        "vue-sweetalert2": "^5.0.5",
+        "vue-upload-image": "^1.1.5",
+        "vue3-dropzone": "^2.0.1"
     }
 }

@@ -2,7 +2,9 @@
 
 namespace App\Telegram\Traits;
 
+use App\Enums\ProductStatus;
 use App\Models\Category;
+use App\Models\Product;
 
 trait Pagination
 {
@@ -35,10 +37,10 @@ trait Pagination
             ];
 
 
-            $bottom_buttons[] = [
-                'text' => (string)$page . ' / ' . (string)ceil($categories_count / 5),
-                'callback_data' => '...'
-            ];
+        $bottom_buttons[] = [
+            'text' => (string)$page . ' / ' . (string)ceil($categories_count / 5),
+            'callback_data' => '...'
+        ];
 
         if ($page < ceil($categories_count / 5))
             $bottom_buttons[] = [
@@ -48,6 +50,41 @@ trait Pagination
         $keyboards[] = $bottom_buttons;
 
         return $keyboards;
+    }
+
+    public function productPagination($page, $category_id)
+    {
+        $products_count = Product::query()
+            ->where('user_id', $this->bot->user_id)
+            ->where('category_id', $category_id)
+            ->where('status', ProductStatus::ACTIVE)
+            ->count();
+
+        $buttons = [];
+
+        if ($page > 1)
+            $buttons[] = [
+                'text' => '⏪',
+                'callback_data' => 'categories.' . $category_id . '.products_page.' . ($page - 1)
+            ];
+
+        $buttons[] = [
+            'text' => $page . ' / ' . $products_count,
+            'callback_data' => '...'
+        ];
+
+        if ($page < $products_count)
+            $buttons[] = [
+                'text' => '⏩',
+                'callback_data' => 'categories.' . $category_id . '.products_page.' . ($page + 1)
+            ];
+
+        $prev_button = [
+            'text' => '⏪ Kategoriyalar',
+            'callback_data' => 'somethingnew'
+        ];
+
+        return [[$buttons], [[$prev_button]]]; //TODO
     }
 
 }

@@ -6,8 +6,7 @@ use App\Models\Bot;
 use App\Models\TelegramUser;
 use App\Telegram\Handles\Menu\MainMenuHandler;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
+use Opcodes\LogViewer\Log;
 
 class Handle
 {
@@ -93,18 +92,34 @@ class Handle
         if (array_key_exists($request['message']['text'], config('telegram.languages'))) {
             (new Language($bot))->setLanguage(new Message($request['message']), $user);
         } else if (array_key_exists($request['message']['text'], getMainMenuAsArray($user->lang))) {
-            (new MainMenuHandler($bot))->{getMainMenuAsArray($user->lang)[$request['message']['text']]}(new Message($request['message']), $user);
+            (new MainMenuHandler($bot, new Message($request['message']), $user))->{getMainMenuAsArray($user->lang)[$request['message']['text']]}(1, false);
         }
 
     }
 
     protected function callbackQueryHandler($bot, $request, $user)
     {
+        $handler = new MainMenuHandler($bot, new Message($request['callback_query']['message']), $user);
+
         if (str_contains($request['callback_query']['data'], 'categories')) {
-            if (str_contains($request['callback_query']['data'], 'page')) {
-                (new MainMenuHandler($bot))
-                    ->categories(new Message($request['callback_query']['message']), $user, (int)explode('page.', $request['callback_query']['data'])[1], true);
+
+            if (str_contains($request['callback_query']['data'], 'products_page')) {
+
+                $parsed = explode('.', $request['callback_query']['data']);
+                $category_id = (int)$parsed[1];
+                $products_page = (int)$parsed[3];
+                \Illuminate\Support\Facades\Log::debug('product_page: ' . $products_page);
+                \Illuminate\Support\Facades\Log::debug('category_id: ' . $category_id);
+                $handler->getProductsByCategory($category_id, $products_page,true);
+
+            } else if (str_contains($request['callback_query']['data'], 'page')) {
+
+                $handler->categories((int)explode('page.', $request['callback_query']['data'])[1], true);
+
             } else {
+
+                $category_id = (int)explode('.', $request['callback_query']['data'])[1];
+                $handler->getProductsByCategory($category_id,1, false);
 
             }
         }

@@ -8,7 +8,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
-import flash from "@/mixins/flash";
+import { UploadMedia, UpdateMedia } from 'vue-media-upload';
+
 
 import 'boxicons'
 
