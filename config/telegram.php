@@ -2,7 +2,7 @@
 
 return [
 
-    'image_url' => 'https://720d-213-230-72-63.eu.ngrok.io/product_images/', //TODO: change every run
+    'image_url' => 'https://720d-213-230-72-63.eu.ngrok.io/product_images/', //TODO: change on every run
 
     'commands' => [
         'start' => \App\Telegram\Commands\Start::class,

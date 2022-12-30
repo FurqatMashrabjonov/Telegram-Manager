@@ -2,5 +2,6 @@
 
 return [
     'welcome' => 'Welcome',
-    'categories' => 'Choose category'
+    'categories' => 'Choose category',
+    'settings' => '⚙ Settings'
 ];

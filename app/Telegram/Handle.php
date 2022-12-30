@@ -5,6 +5,7 @@ namespace App\Telegram;
 use App\Models\Bot;
 use App\Models\TelegramUser;
 use App\Telegram\Handles\Menu\MainMenuHandler;
+use App\Telegram\Handles\Menu\SettingsMenuHandler;
 use Illuminate\Http\Request;
 use Opcodes\LogViewer\Log;
 
@@ -23,6 +24,18 @@ class Handle
         $this->$parsed($bot, $request, $user);
 
         return true;
+    }
+
+    public function handle($token, $request): void
+    {
+//        if (isset($request['ok']) && !$request['ok'])
+//            return false;
+
+        $bot = Bot::query()->where('token', $token)->first();
+        $user = $this->user($bot, $request);
+
+        $parsed = $this->parser($request) . 'Handler';
+        $this->$parsed($bot, $request, $user);
     }
 
     protected function parser($request)
@@ -88,11 +101,12 @@ class Handle
 
     protected function textHandler($bot, $request, $user)
     {
-
         if (array_key_exists($request['message']['text'], config('telegram.languages'))) {
             (new Language($bot))->setLanguage(new Message($request['message']), $user);
         } else if (array_key_exists($request['message']['text'], getMainMenuAsArray($user->lang))) {
             (new MainMenuHandler($bot, new Message($request['message']), $user))->{getMainMenuAsArray($user->lang)[$request['message']['text']]}(1, false);
+        } else if (array_key_exists($request['message']['text'], getSettingsMenuAsArray($user->lang))) {
+            (new SettingsMenuHandler($bot, new Message($request['message']), $user))->{getSettingsMenuAsArray($user->lang)[$request['message']['text']]}();
         }
 
     }
@@ -108,9 +122,7 @@ class Handle
                 $parsed = explode('.', $request['callback_query']['data']);
                 $category_id = (int)$parsed[1];
                 $products_page = (int)$parsed[3];
-                \Illuminate\Support\Facades\Log::debug('product_page: ' . $products_page);
-                \Illuminate\Support\Facades\Log::debug('category_id: ' . $category_id);
-                $handler->getProductsByCategory($category_id, $products_page,true);
+                $handler->getProductsByCategory($category_id, $products_page, true);
 
             } else if (str_contains($request['callback_query']['data'], 'page')) {
 
@@ -119,7 +131,7 @@ class Handle
             } else {
 
                 $category_id = (int)explode('.', $request['callback_query']['data'])[1];
-                $handler->getProductsByCategory($category_id,1, false);
+                $handler->getProductsByCategory($category_id, 1, false);
 
             }
         }

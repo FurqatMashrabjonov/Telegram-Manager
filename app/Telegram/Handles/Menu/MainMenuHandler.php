@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\TelegramUser;
 use App\Telegram\Api\Client;
 use App\Telegram\Message;
+use App\Telegram\ReplyMarkupMenu;
 use App\Telegram\Traits\Pagination;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -61,25 +62,25 @@ class MainMenuHandler extends Client
             ->with(['image'])
             ->first();
 
-            $this->sendPhoto($this->message->chat->id, config('telegram.image_url') . $this->bot->user_id . '/' . $product->id . '/' . $product->image->path, [
-                'caption' => <<<EOF
+        $this->sendPhoto($this->message->chat->id, config('telegram.image_url') . $this->bot->user_id . '/' . $product->id . '/' . $product->image->path, [
+            'caption' => <<<EOF
 $product->name
 
 Price: $product->price
 
 $product->description
 EOF,
-                'reply_markup' => json_encode([
-                    'inline_keyboard' => $this->productPagination($products_page, $category_id)
-                ])
-            ]);
+            'reply_markup' => json_encode([
+                'inline_keyboard' => $this->productPagination($products_page, $category_id)
+            ])
+        ]);
         $this->deleteMessage($this->message->chat->id, $this->message->message_id);
 
     }
 
     public function settings()
     {
-
+        return (new ReplyMarkupMenu($this->bot))->settingsMenu($this->message);
     }
 
     public function orders()
