@@ -36,4 +36,9 @@ class SettingsMenuHandler extends Client
         (new \App\Telegram\Language($this->bot))->askLanguage($this->message);
     }
 
+    public function backToMainMenu()
+    {
+        return (new ReplyMarkupMenu($this->bot))->mainMenu($this->message);
+    }
+
 }

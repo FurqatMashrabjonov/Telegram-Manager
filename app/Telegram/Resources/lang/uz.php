@@ -2,5 +2,6 @@
 
 return [
     'welcome' => 'Hush kelibsiz',
-    'categories' => 'Kategoriyani tanlang'
+    'categories' => 'Kategoriyani tanlang',
+    'settings' => '⚙ Sozlamalar'
 ];
